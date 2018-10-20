@@ -1,0 +1,27 @@
+# Offense count: 1
+Lint/Debugger:
+  Exclude:
+    - 'bin/console'
+
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'Gemfile'
+    - 'Rakefile'
+
+Metrics/LineLength:
+  Max: 140
+  IgnoredPatterns: ['(\A|\s)#','Nenv\.']
+
+Metrics/PerceivedComplexity:
+  Max: 8
+
+Layout/FirstParameterIndentation:
+  Enabled: false
+
+# Robocop misses when we have an out variable so don't let it 'fix' things.
+Lint/UnusedMethodArgument:
+  AutoCorrect: false
+
+Metrics/MethodLength:
+  Max: 25

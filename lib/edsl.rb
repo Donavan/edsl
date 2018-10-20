@@ -1,0 +1,5 @@
+require 'edsl/version'
+require 'watir'
+require 'edsl/dsl'
+require 'edsl/element_container'
+require 'edsl/watir_elements'
