@@ -70,6 +70,7 @@ module EDSL
       end
 
       define_method(name) do
+        return default_method.call(name, self) if default_method.is_a?(Proc)
         default_method.nil? ? send(ele_meth) : send(ele_meth).send(default_method)
       end
 

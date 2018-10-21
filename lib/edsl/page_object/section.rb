@@ -29,6 +29,14 @@ module EDSL
         element(name, { how: :div, assign_method: :populate_with,
                         wrapper_fn: lambda { |element, _container| section_class.new(element, self) } }.merge(opts))
       end
+
+      def sections(name, section_class, opts)
+        i_sel = opts.delete(:item)
+        item_how = i_sel.delete(:how)
+        default_method = lambda { |_name, container| container.send(item_how, i_sel).map { |i| section_class.new(i, self) } }
+        element(name, { how: :div,
+                        default_method:  default_method }.merge(opts))
+      end
     }
   end
 end

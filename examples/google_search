@@ -20,8 +20,14 @@ class AppBar < EDSL::PageObject::Section
   div(:results_stats, id: 'resultStats')
 end
 
+class SearchResult < EDSL::PageObject::Section
+  h3(:title, index: 0)
+  link(:result_link, index: 0, default_method: :href)
+end
+
 class GoogleResultsPage < GoogleSearchPage
   section(:app_bar, AppBar, id: 'appbar')
+  sections(:search_results, SearchResult, id: 'search', item: { how: :divs, class: 'g' })
 end
 
 module GoogleDemo
@@ -33,6 +39,8 @@ module GoogleDemo
   visit(GoogleSearchPage).populate_with( query: query)
 
   on(GoogleResultsPage) do |page|
-    puts "There are #{page.app_bar.results_stats} for #{query}"
+    puts "There are #{page.app_bar.results_stats.strip} for #{query}"
+    result = page.search_results.first
+    puts "The first result is titled \"#{result.title}\" and points to #{result.result_link}"
   end
 end
