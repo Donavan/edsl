@@ -1,8 +1,25 @@
 # Root module for the gem
+require 'cpt_hook'
+
 module EDSL
   # Ensure the DSL methods are applied when we're included
   def self.included(cls)
     cls.extend EDSL::DSL
+
+    cls.send(:define_method, :resolve_with) do |with_var|
+      return self if with_var == :page
+      return :self if with_var == :element
+      with_var
+    end
+
+    cls.send(:define_method, :apply_hooks) do |hook_defs, element|
+      return nil if element.nil?
+      return element if hook_defs.nil?
+      hd = hook_defs.dup
+      hd.hooks.each { |hook| hook.call_chain.each { |cc| cc.resolve_with { |c| resolve_with(c) } } }
+      hd.hooks.each { |hook| hook.call_chain.each { |cc| cc.resolve_contexts { |c| resolve_with(c) } } }
+      CptHook::Hookable.new(element, hd, self)
+    end
   end
 
   # Use a block to add new methods to the DSL.
@@ -40,13 +57,16 @@ module EDSL
       default_method = opts.delete(:default_method)
       assign_method = opts.delete(:assign_method)
       presence_method = opts.delete(:presence_method) || :present?
+      hooks = opts.delete(:hooks)
+      wrapper_fn = opts.delete(:wrapper_fn) || lambda { |_e, _p| return _e }
 
       ele_meth = "#{name}_element"
       define_method(ele_meth) do
         ele = yield name, self, opts if block_given?
         ele ||= how.call(name, self, opts) if how.is_a?(Proc)
         ele ||= send(how, opts)
-        ele
+        ele = wrapper_fn.call(ele, self)
+        hooks.nil? ? ele : send(:apply_hooks, hooks, ele)
       end
 
       define_method(name) do
@@ -84,9 +104,7 @@ module EDSL
     end
 
     def self.define_accessors(accessor_array)
-      accessor_array.each do |acc|
-        define_accessor(*acc)
-      end
+      accessor_array.each { |acc| define_accessor(*acc) }
     end
   end
 end

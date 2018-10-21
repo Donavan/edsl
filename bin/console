@@ -5,7 +5,11 @@ require 'edsl'
 
 # Simple test class
 class GoogleSearchPage < EDSL::ElementContainer
-  text_field(:query, name: 'q')
+  TEST_HOOKS = CptHook.define_hooks do
+    after(:set).call(:search)
+  end
+  text_field(:query, name: 'q', hooks: TEST_HOOKS)
+  button(:search, name: 'btnK')
 end
 
 # You can add fixtures and/or initialization code here to make experimenting

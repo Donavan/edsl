@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'pry'
+require 'edsl'
+require 'edsl/page_object'
+
+# Simple class to represent the initial search screen
+class GoogleSearchPage < EDSL::PageObject::Page
+  page_url 'https://www.google.com'
+
+  TEST_HOOKS = CptHook.define_hooks do
+    after(:set).call(:search)
+  end
+  text_field(:query, name: 'q', hooks: TEST_HOOKS)
+  button(:search, name: 'btnK')
+end
+
+class AppBar < EDSL::PageObject::Section
+  div(:results_stats, id: 'resultStats')
+end
+
+class GoogleResultsPage < GoogleSearchPage
+  section(:app_bar, AppBar, id: 'appbar')
+end
+
+module GoogleDemo
+  extend EDSL::PageObject::Navigation
+
+  query = ARGV[0] || 'ruby'
+
+  @browser = Watir::Browser.new :chrome, headless: true
+  visit(GoogleSearchPage).populate_with( query: query)
+
+  on(GoogleResultsPage) do |page|
+    puts "There are #{page.app_bar.results_stats} for #{query}"
+  end
+end

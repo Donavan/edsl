@@ -32,5 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop'
 
-  spec.add_dependency 'watir'
+  spec.add_runtime_dependency 'watir'
+  spec.add_runtime_dependency 'cpt_hook'
+  spec.add_runtime_dependency 'facets'
 end
