@@ -1,6 +1,4 @@
 require 'delegate'
-require_relative 'population'
-
 module EDSL
   # This serves as a handy base class for custom elements, page objects and page sections
   # as this inherits from SimpleDelegator any call that would be valid on the root element
@@ -14,7 +12,6 @@ module EDSL
   #
   class ElementContainer < ::SimpleDelegator
     include EDSL
-    include EDSL::Population
 
     attr_reader :parent_container
     alias_method :root_element, :__getobj__
