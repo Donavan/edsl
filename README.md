@@ -1,13 +1,9 @@
-# EDSL
+# EDSL - Element DSL
 
-This gem implements an extensible DSL for implementing the page object, pattern.
-It is very similar to PageObject and can almost be used as a drop-in replacement for it.
-However, this gem focuses the element DSL portion only.
+This gem implements an extensible DSL for declaring web elements as part of a page object pattern.  The focus of this gem is making it easy add new accessors allowing for more flexibility when creating abstractions.
 
-This gem was created to simplify the process of creating abstractions for web automation.
-Because EDSL is easy to extend, you can create custom DSL methods that are first class citizens
+This gem does not implement the page object pattern, for an implementation of page object using this gem see edsl-pageobject.
 
-This is still very much a work in progress.  Primary documentation can be found in code comments for now.
 
 ## Installation
 
@@ -27,7 +23,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Below is an example of how one might extend the DSL to add a new type of element.
+ 
+```ruby
+class DateEdit < SimpleDelegatopr
+  def value
+    Chronic.parse(super)
+  end
+end
+
+opts = { how: :text_field,           # call text_field to find this type of element
+		 assign_method: :set,        # call element.set(value) when we call name=
+		 default_method: :value,     # call element.value when we call name
+		 presence_method: :present?
+		 wrapper_fn: lambda { |ele, _parent| DateEdit.new(ele) }
+		 } # call element.present? when we call name?
+
+EDSL.define_accessor(:date_field, opts )
+```
+
+
 
 ## Development
 
