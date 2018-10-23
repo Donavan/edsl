@@ -62,7 +62,7 @@ module EDSL
 
       ele_meth = "#{name}_element"
       define_method(ele_meth) do
-        ele = yield name, self, opts if block_given?
+        ele = yield if block_given?
         ele ||= how.call(name, self, opts) if how.is_a?(Proc)
         ele ||= send(how, opts)
         ele = wrapper_fn.call(ele, self)
@@ -81,6 +81,7 @@ module EDSL
       return unless assign_method
 
       define_method("#{name}=") do |value|
+        return assign_method.call(name, self, value) if assign_method.is_a?(Proc)
         send(ele_meth).send(assign_method, value)
       end
     end
