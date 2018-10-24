@@ -7,9 +7,15 @@ module EDSL
     cls.extend EDSL::DSL
 
     cls.send(:define_method, :resolve_with) do |with_var|
-      return self if with_var == :page
+      return with_var.call if with_var.is_a?(Proc)
+      return self if with_var == :parent
       return :self if with_var == :element
       with_var
+    end
+
+    cls.send(:define_method, :resolve_context) do |context|
+      return context.call if context.is_a?(Proc)
+      context
     end
 
     cls.send(:define_method, :apply_hooks) do |hook_defs, element|
@@ -17,7 +23,7 @@ module EDSL
       return element if hook_defs.nil?
       hd = hook_defs.dup
       hd.hooks.each { |hook| hook.call_chain.each { |cc| cc.resolve_with { |c| resolve_with(c) } } }
-      hd.hooks.each { |hook| hook.call_chain.each { |cc| cc.resolve_contexts { |c| resolve_with(c) } } }
+      hd.hooks.each { |hook| hook.call_chain.each { |cc| cc.resolve_contexts { |c| resolve_context(c) } } }
       CptHook::Hookable.new(element, hd, self)
     end
   end
@@ -31,6 +37,16 @@ module EDSL
   # See the DSL module for more info
   def self.define_accessor(acc_name, default_opts)
     DSL.define_accessor(acc_name, default_opts)
+  end
+
+  # Allow an accessor to be accessed by a different name
+  def self.alias_accessor(new_name, acc_name)
+    DSL.alias_accessor(new_name, acc_name)
+  end
+
+  # Allow multiple accessors to be defined at once
+  def self.define_accessors(accessor_array)
+    DSL.define_accessors(accessor_array)
   end
 
   # These methods will be extended into any class which includes EDSL.
@@ -75,6 +91,7 @@ module EDSL
       end
 
       define_method("#{name}?") do
+        return presence_method.call(name, self) if presence_method.is_a?(Proc)
         send(ele_meth).send(presence_method)
       end
 
@@ -101,10 +118,12 @@ module EDSL
       end
     end
 
+    # Allow an accessor to be accessed by a different name
     def self.alias_accessor(new_name, acc_name)
       self.class.send(:alias_method, new_name, acc_name)
     end
 
+    # Allow multiple accessors to be defined at once
     def self.define_accessors(accessor_array)
       accessor_array.each { |acc| define_accessor(*acc) }
     end

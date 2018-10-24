@@ -1,9 +1,5 @@
-RSpec.describe Edsl do
+RSpec.describe EDSL do
   it 'has a version number' do
-    expect(Edsl::VERSION).not_to be nil
-  end
-
-  it 'does something useful' do
-    expect(false).to eq(true)
+    expect(EDSL::VERSION).not_to be nil
   end
 end

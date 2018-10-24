@@ -28,11 +28,13 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 1.16'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'pry-byebug'
+  spec.add_development_dependency 'pry-stack_explorer'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'simplecov'
 
-  spec.add_runtime_dependency 'watir'
-  spec.add_runtime_dependency 'cpt_hook'
-  spec.add_runtime_dependency 'facets'
+  spec.add_runtime_dependency 'cpt_hook', '~> 0.3'
+  spec.add_runtime_dependency 'facets' , '~> 3.1'
+  spec.add_runtime_dependency 'watir', '~> 6.14'
 end
