@@ -6,8 +6,7 @@ RSpec.describe 'EDSL::DSL' do
 
   it 'can be extended with extend_dsl' do
     EDSL.extend_dsl do
-      def spec_2
-      end
+      def spec_2; end
     end
     expect(EDSL::DSL.instance_methods).to include(:spec_2)
   end
@@ -39,12 +38,11 @@ RSpec.describe 'EDSL::DSL' do
     container_double = watir_container_double
     element_double = watir_element_double
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
-    container = unique_container_object(:custom_acc_def, container_double)
+    container = unique_container_object(:custom_acc_opts, container_double)
     container.class.send(:spec_8, :test_element2, id: 'foo')
     expect(container).to receive(:div).with(id: 'foo')
     expect(container).to respond_to(:test_element2)
 
     container.test_element2
   end
-
 end

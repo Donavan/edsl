@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Donavan Stanley']
   spec.email         = ['donavan.stanley@gmail.com']
 
-  spec.summary       = 'An easy to extend DSL for web elements'
-  spec.description   = 'Page object pattern without PageObject'
-  spec.homepage      = 'https://github.com/jdonavan'
+  spec.summary       = 'An easy to extend DSL for web elements.'
+  spec.description   = 'This gem serves as a base for implementing the page object pattern.'
+  spec.homepage      = 'https://github.com/donavan/edsl'
   spec.license       = 'MIT'
 
   spec.metadata['homepage_uri'] = spec.homepage
@@ -35,6 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov'
 
   spec.add_runtime_dependency 'cpt_hook', '~> 0.3'
-  spec.add_runtime_dependency 'facets' , '~> 3.1'
+  spec.add_runtime_dependency 'facets', '~> 3.1'
   spec.add_runtime_dependency 'watir', '~> 6.14'
 end

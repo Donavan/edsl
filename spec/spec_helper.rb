@@ -15,8 +15,6 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
-
-
 end
 
 def watir_container_double
@@ -32,7 +30,7 @@ def watir_element_double
   ele = double('element')
   allow(ele).to receive(:set).with(anything)
   allow(ele).to receive(:set?).with(no_args).and_return(true)
-  allow(ele).to receive(:value).with(no_args)
+  allow(ele).to receive(:value).with(no_args).and_return('value')
   allow(ele).to receive(:click).with(no_args)
   allow(ele).to receive(:text).with(no_args).and_return('text')
   allow(ele).to receive(:href).with(no_args).and_return('href')

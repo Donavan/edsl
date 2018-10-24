@@ -14,7 +14,7 @@ module EDSL
     include EDSL
 
     attr_reader :parent_container
-    alias_method :root_element, :__getobj__
+    alias root_element __getobj__
 
     def initialize(element, parent = nil)
       super(element)

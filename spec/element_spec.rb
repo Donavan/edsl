@@ -1,4 +1,3 @@
-
 RSpec.describe 'element DSL' do
   it 'creates a default method' do
     container_double = watir_container_double
@@ -75,7 +74,7 @@ RSpec.describe 'element DSL' do
     element_double = watir_element_double
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
     container = unique_container_object(:decorators, container_double)
-    wrapper_fn = lambda { |ele, cont| EDSL::ElementContainer.new(ele, cont) }
+    wrapper_fn = ->(ele, cont) { EDSL::ElementContainer.new(ele, cont) }
     container.class.send(:element, :test_div, how: :div, wrapper_fn: wrapper_fn, id: 'foo')
     expect(container.test_div).to be_an(EDSL::ElementContainer)
   end
@@ -85,7 +84,7 @@ RSpec.describe 'element DSL' do
     element_double = watir_element_double
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
     container = unique_container_object(:how_as_proc, container_double)
-    how_proc = lambda { |_name, cont, opts| cont.div(opts) }
+    how_proc = ->(_name, cont, opts) { cont.div(opts) }
     container.class.send(:element, :test_div, how: how_proc, id: 'foo')
     expect(container_double).to receive(:div).with(id: 'foo')
     expect(container.test_div).to eq(element_double)
@@ -97,7 +96,7 @@ RSpec.describe 'element DSL' do
     allow(element_double).to receive(:default_method).with(no_args).and_return('default')
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
     container = unique_container_object(:default_as_proc, container_double)
-    default_method = lambda { |name, cont| cont.send("#{name}_element").default_method }
+    default_method = ->(name, cont) { cont.send("#{name}_element").default_method }
     container.class.send(:element, :test_div, default_method: default_method, how: :div, id: 'foo')
     expect(element_double).to receive(:default_method)
     expect(container.test_div).to eq('default')
@@ -108,7 +107,7 @@ RSpec.describe 'element DSL' do
     element_double = watir_element_double
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
     container = unique_container_object(:assign_as_proc, container_double)
-    assign_proc = lambda { |name, cont, value| cont.send("#{name}_element").set(value) }
+    assign_proc = ->(name, cont, value) { cont.send("#{name}_element").set(value) }
     container.class.send(:element, :test_div, assign_method: assign_proc, how: :div, id: 'foo')
     expect(element_double).to receive(:set).with('test')
     container.test_div = 'test'
@@ -119,7 +118,7 @@ RSpec.describe 'element DSL' do
     element_double = watir_element_double
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
     container = unique_container_object(:presence_as_proc, container_double)
-    presence_method = lambda { |name, cont| cont.send("#{name}_element").present? }
+    presence_method = ->(name, cont) { cont.send("#{name}_element").present? }
     container.class.send(:element, :test_div, presence_method: presence_method, how: :div, id: 'foo')
     expect(element_double).to receive(:present?)
     container.test_div?
@@ -172,7 +171,7 @@ RSpec.describe 'element DSL' do
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
     allow(other_double).to receive(:some_fn)
     container = unique_container_object(:hook_proc_context_container, container_double)
-    context_proc = lambda { return other_double }
+    context_proc = -> { return other_double }
     hooks = CptHook.define_hooks do
       before(:text).call(:some_fn).using(context_proc)
     end
@@ -244,7 +243,7 @@ RSpec.describe 'element DSL' do
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
     allow(container_double).to receive(:some_fn).with(any_args)
     container = unique_container_object(:hook_proc_arg, container_double)
-    value_proc = lambda { return 42 }
+    value_proc = -> { return 42 }
     hooks = CptHook.define_hooks do
       before(:text).call(:some_fn).with(value_proc)
     end
@@ -259,7 +258,7 @@ RSpec.describe 'element DSL' do
     allow(container_double).to receive(:div).with(any_args).and_return(element_double)
     allow(element_double).to receive(:some_fn).with(any_args)
     container = unique_container_object(:hook_proc_hook, container_double)
-    call_proc = lambda { |ele| ele.some_fn(42) }
+    call_proc = ->(ele) { ele.some_fn(42) }
     hooks = CptHook.define_hooks do
       before(:text).call(call_proc).with(:element)
     end

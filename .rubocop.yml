@@ -1,4 +1,9 @@
-# Offense count: 1
+AllCops:
+  Exclude:
+    - 'spec/*'
+    - 'scratch.rb'
+    - '*.gemspec'
+
 Lint/Debugger:
   Exclude:
     - 'bin/console'
