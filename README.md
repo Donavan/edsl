@@ -1,6 +1,6 @@
 # EDSL - Element DSL
 
-This gem implements an extensible DSL for declaring web elements as part of a page object pattern.  This gem does **not** implement the page object pattern, for an implementation of page object using this gem see edsl-pageobject.
+This gem implements an extensible DSL for declaring web elements as part of a page object pattern.  This gem does **not** implement the page object pattern, for an implementation of page object using this gem see [edsl-pageobject](https://github.com/donavan/edsl-pageobject).
 
 This gem was created out of the need to rapidly produce abstractions for non-standard web elements. With EDSL support for new accessors and other DSL methods can be implemented without needing to modify any EDSL source or monkey patching.  It allows you to rapidly prototype using lambdas, or to build full classes to use in place of existing elements.
 
