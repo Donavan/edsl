@@ -3,7 +3,7 @@ require 'facets/string/snakecase'
 module EDSL
   # This module extends the DSL to include the various Watir elements
   module WatirElements
-    SPECIAL_ELEMENTS = %i[button a radio_set input select textarea].freeze
+    SPECIAL_ELEMENTS = %i[button a radio_set input select textarea ul footer frameset head header ol].freeze
 
     TEXT_ELEMENTS = Watir.tag_to_class.keys.reject { |k| SPECIAL_ELEMENTS.include?(k) }.map { |t| t.to_s.snakecase }.freeze
     TEXT_ELEMENTS.each do |tag|
@@ -18,5 +18,8 @@ module EDSL
 
     SETABLE_ELEMENTS = %i[radio checkbox].freeze
     SETABLE_ELEMENTS.each { |tag| EDSL.define_accessor(tag, how: tag, default_method: :set?, assign_method: :set) }
+
+    GENERIC_ELEMENTS = %i[ul footer frameset head header ol]
+    GENERIC_ELEMENTS.each { |tag| EDSL.define_accessor(tag, how: tag) }
   end
 end
