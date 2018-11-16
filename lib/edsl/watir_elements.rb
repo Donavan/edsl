@@ -21,5 +21,8 @@ module EDSL
 
     GENERIC_ELEMENTS = %i[ul footer frameset head header ol]
     GENERIC_ELEMENTS.each { |tag| EDSL.define_accessor(tag, how: tag) }
+
+    SELECT_ELEMENTS = %i[select select_list]
+    SELECT_ELEMENTS.each { |tag| EDSL.define_accessor(tag, how: tag, default_method: :text, assign_method: :select) }
   end
 end
