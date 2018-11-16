@@ -79,8 +79,8 @@ module EDSL
     # A text field could be declared like this:
     #  element(:username, id: 'some_id', how: Proc.new { |name, container, opts| container.text_field(opts) }, default_method: :value, assign_method: :set)
     #
-    def element(name, opts)
-      element_method = _add_element_method(name, opts)
+    def element(name, opts, &block)
+      element_method = _add_element_method(name, opts, &block)
       _add_common_methods(name, element_method, opts)
       _add_assignment_methods(name, element_method, opts)
     end
@@ -117,14 +117,14 @@ module EDSL
 
     # rubocop:disable Metrics/AbcSize
     # Helper function to reduce perceived complexity of element
-    def _add_element_method(name, opts)
+    def _add_element_method(name, opts, &block)
       how = opts.delete(:how)
       hooks = opts.delete(:hooks)
       wrapper_fn = opts.delete(:wrapper_fn) || ->(e, _p) { return e }
 
       ele_meth = "#{name}_element"
       define_method(ele_meth) do
-        ele = yield if block_given?
+        ele = yield self if block_given?
         ele ||= how.call(name, self, opts) if how.is_a?(Proc)
         ele ||= send(how, opts)
         ele = wrapper_fn.call(ele, self)
