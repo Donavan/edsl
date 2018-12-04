@@ -16,8 +16,10 @@ module EDSL
     CONTENT_EDITABLE_ELEMENTS = %i[text_field textarea].freeze
     CONTENT_EDITABLE_ELEMENTS.each { |tag| EDSL.define_accessor(tag, how: tag, default_method: :value, assign_method: :set) }
 
-    SETABLE_ELEMENTS = %i[radio checkbox].freeze
-    SETABLE_ELEMENTS.each { |tag| EDSL.define_accessor(tag, how: tag, default_method: :set?, assign_method: :set) }
+    RADIO_SET = lambda { |name, cont, value| cont.send("#{name}_element").set if value }
+    EDSL.define_accessor(:radio, how: :radio, default_method: :set?, assign_method: RADIO_SET)
+
+    EDSL.define_accessor(:checkbox, how: :checkbox, default_method: :set?, assign_method: :set)
 
     GENERIC_ELEMENTS = %i[ul footer frameset head header ol]
     GENERIC_ELEMENTS.each { |tag| EDSL.define_accessor(tag, how: tag) }

@@ -34,7 +34,7 @@ module EDSL
 
     cls.send(:define_method, :resolve_context) do |context|
       return context.call if context.is_a?(Proc)
-
+      return self.send(context) if context.is_a?(Symbol)
       context
     end
   end
